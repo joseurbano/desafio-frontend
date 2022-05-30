@@ -1,26 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { PieChart, Pie, Sector, Cell } from "recharts";
 import "./index.css";
-
-const COLORS = [
-  "#7AC74C",
-  "#A33EA1",
-  "#EE8130",
-  "#A98FF3",
-  "#6390F0",
-  "#A6B91A",
-  "#A8A77A",
-  "#F7D02C",
-  "#E2BF65",
-  "#D685AD",
-  "#C22E28",
-  "#F95587",
-  "#B6A136",
-  "#B7B7CE",
-  "#96D9D6",
-  "#735797",
-  "#6F35FC",
-];
+import PokemonTypeColors from "../../Config/pokemonTypeColors";
 
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
@@ -120,9 +101,12 @@ export default function PieChartPokemon(props) {
           dataKey="value"
           onMouseEnter={onPieEnter}
         >
-          {props.data?.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
+          {props.data?.map((entry, index) => {
+            const cellColor = PokemonTypeColors.find(p=>p.type=== entry.name)?.color
+            return (
+              <Cell key={`cell-${index}`} fill={cellColor} />
+            );
+          })}
         </Pie>
       </PieChart>
     </div>

@@ -8,6 +8,7 @@ import BarChart from "../../Components/BarChart";
 
 const pokeapiUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=151";
 
+
 export default function Main() {
   const [pokemons, setPokemons] = useState([]);
   const [counterType, setCounterType] = useState();
