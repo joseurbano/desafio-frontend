@@ -85,7 +85,7 @@ export default function PieChartPokemon(props) {
     [setActiveIndex]
   );
   return (
-    <div style={{minWidth: 400, flex: 1, height: 400}}>
+    <div className="chart" style={{minWidth: 400, flex: 1, height: 400}}>
       <h3 className="title">{props.title}</h3>
       <ResponsiveContainer>
         <PieChart>
@@ -97,8 +97,8 @@ export default function PieChartPokemon(props) {
             data={props.data}
             cx={"50%"}
             cy={"40%"}
-            innerRadius={"30%"}
-            outerRadius={"50%"}
+            innerRadius={"45%"}
+            outerRadius={"65%"}
             dataKey="value"
             onMouseEnter={onPieEnter}
           >

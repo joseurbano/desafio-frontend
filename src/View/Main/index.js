@@ -4,6 +4,7 @@ import "./index.css";
 import ListPokemon from "./../../Components/ListPokemon";
 import PieChart from "../../Components/PieChart";
 import BarChart from "../../Components/BarChart";
+import Loading from "../../Components/Loading";
 
 const pokeapiUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=151";
 
@@ -11,7 +12,7 @@ export default function Main() {
   const [pokemons, setPokemons] = useState([]);
   const [counterType, setCounterType] = useState();
   const [counterAbilities, setCounterAbilities] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   async function searchingAPI() {
     let result = [];
@@ -60,7 +61,7 @@ export default function Main() {
   useEffect(() => {
     searchingAPI().then((result) => {
       setPokemons(result);
-      setLoading(true);
+      setLoading(false);
 
       const types = settingTypes(result);
       let auxCounterType = initCountType(types);
@@ -81,7 +82,9 @@ export default function Main() {
     });
   }, []);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <div className="app">
       <div className="row-charts">
         <PieChart title="Nº de Pokemons por Tipo" data={counterType} />

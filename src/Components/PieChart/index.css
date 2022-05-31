@@ -5,3 +5,11 @@
     font-weight: bold;
     text-align: center;
 }
+.chart{
+    background-color: white;
+    border-width: 3px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 12px;
+    margin: 8px;
+}

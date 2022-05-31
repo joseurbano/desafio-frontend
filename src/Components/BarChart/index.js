@@ -9,10 +9,11 @@ import {
   ResponsiveContainer,
   Label,
 } from "recharts";
+import './index.css'
 
 export default function BarChartPokemon(props) {
   return (
-    <div style={{ minWidth: 300, flex: 1, height: 400 }}>
+    <div className="chart" style={{ minWidth: 300, flex: 1, height: 400 }}>
       <h3 className="title">{props.title}</h3>
       <ResponsiveContainer height="90%">
         <BarChart
@@ -52,7 +53,7 @@ export default function BarChartPokemon(props) {
             isAnimationActive
             name="Quantidade de Pokemons"
             dataKey="value"
-            fill="#a85632"
+            fill="#D53B2D"
           />
         </BarChart>
       </ResponsiveContainer>

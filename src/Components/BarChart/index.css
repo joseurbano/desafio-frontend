@@ -3,3 +3,12 @@
     font-weight: bold;
     line-break: auto;
 }
+.chart{
+    padding-top: 16px;
+    background-color: white;
+    border-width: 3px;
+    border-color: black;
+    border-style: solid;
+    border-radius: 12px;
+    margin: 8px;
+}

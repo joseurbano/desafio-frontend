@@ -1,9 +1,10 @@
-.app{
-    background-color: #ddd;
-    padding: 16px;
-    justify-content: center;
+.app {
+  background-color: #d53b2d;
+  padding: 16px;
+  justify-content: center;
 }
-.row-charts{
-    display:flex;
-    flex-wrap: wrap;
+.row-charts {
+  display: flex;
+  flex-wrap: wrap;
 }
+
