@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { PieChart, Pie, Sector, Cell } from "recharts";
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 import "./index.css";
 import PokemonTypeColors from "../../Config/pokemonTypeColors";
 
@@ -85,30 +85,32 @@ export default function PieChartPokemon(props) {
     [setActiveIndex]
   );
   return (
-    <div>
-      <h3 className="title">Número de Pokemons por tipo</h3>
-      <PieChart height={300} width={400}>
-        <Pie
-          line={false}
-          className="pie-chart"
-          activeIndex={activeIndex}
-          activeShape={renderActiveShape}
-          data={props.data}
-          cx={190}
-          cy={100}
-          innerRadius={"30%"}
-          outerRadius={"50%"}
-          dataKey="value"
-          onMouseEnter={onPieEnter}
-        >
-          {props.data?.map((entry, index) => {
-            const cellColor = PokemonTypeColors.find(p=>p.type=== entry.name)?.color
-            return (
-              <Cell key={`cell-${index}`} fill={cellColor} />
-            );
-          })}
-        </Pie>
-      </PieChart>
+    <div style={{minWidth: 400, flex: 1, height: 400}}>
+      <h3 className="title">{props.title}</h3>
+      <ResponsiveContainer>
+        <PieChart>
+          <Pie
+            line={false}
+            className="pie-chart"
+            activeIndex={activeIndex}
+            activeShape={renderActiveShape}
+            data={props.data}
+            cx={"50%"}
+            cy={"40%"}
+            innerRadius={"30%"}
+            outerRadius={"50%"}
+            dataKey="value"
+            onMouseEnter={onPieEnter}
+          >
+            {props.data?.map((entry, index) => {
+              const cellColor = PokemonTypeColors.find(
+                (p) => p.type === entry.name
+              )?.color;
+              return <Cell key={`cell-${index}`} fill={cellColor} />;
+            })}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
     </div>
   );
 }

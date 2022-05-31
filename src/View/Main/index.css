@@ -1,6 +1,9 @@
 .app{
     background-color: #ddd;
-    flex: auto;
     padding: 16px;
     justify-content: center;
+}
+.row-charts{
+    display:flex;
+    flex-wrap: wrap;
 }

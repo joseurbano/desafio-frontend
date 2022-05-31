@@ -7,6 +7,7 @@ const { Text } = Typography;
 export default function ListPokemon(props) {
   return (
     <List
+      loading={!props.loading}
       className="box"
       dataSource={props.data}
       grid={{
@@ -21,6 +22,7 @@ export default function ListPokemon(props) {
       renderItem={(item) => (
         <List.Item>
           <Card
+            loading={!props.loading}
             style={{ flex: 1 }}
             bordered={true}
             className="card"

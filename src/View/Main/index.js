@@ -3,16 +3,15 @@ import "antd/dist/antd.min.css";
 import "./index.css";
 import ListPokemon from "./../../Components/ListPokemon";
 import PieChart from "../../Components/PieChart";
-import { Row, Col } from "antd";
 import BarChart from "../../Components/BarChart";
 
 const pokeapiUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=151";
-
 
 export default function Main() {
   const [pokemons, setPokemons] = useState([]);
   const [counterType, setCounterType] = useState();
   const [counterAbilities, setCounterAbilities] = useState();
+  const [loading, setLoading] = useState(false);
 
   async function searchingAPI() {
     let result = [];
@@ -61,6 +60,7 @@ export default function Main() {
   useEffect(() => {
     searchingAPI().then((result) => {
       setPokemons(result);
+      setLoading(true);
 
       const types = settingTypes(result);
       let auxCounterType = initCountType(types);
@@ -83,21 +83,14 @@ export default function Main() {
 
   return (
     <div className="app">
-      <Row justify="center">
-        <Col >
-          <PieChart data={counterType} />
-        </Col>
-        <Col >
-          <BarChart data={counterAbilities} />
-        </Col>
-      </Row>
-      <Row justify="center">
-        {pokemons.length > 0 ? (
-          <ListPokemon data={pokemons} />
-        ) : (
-          <h1>Carregando</h1>
-        )}
-      </Row>
+      <div className="row-charts">
+        <PieChart title="Nº de Pokemons por Tipo" data={counterType} />
+        <BarChart
+          title="Nº de Pokemons por Quantidade de Habilidades"
+          data={counterAbilities}
+        />
+      </div>
+      <ListPokemon data={pokemons} loading={loading} />
     </div>
   );
 }
