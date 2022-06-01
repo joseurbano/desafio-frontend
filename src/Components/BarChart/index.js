@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   Label,
 } from "recharts";
-import './index.css'
+import "./index.css";
 
 export default function BarChartPokemon(props) {
   return (

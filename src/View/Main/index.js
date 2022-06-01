@@ -6,18 +6,51 @@ import PieChart from "../../Components/PieChart";
 import BarChart from "../../Components/BarChart";
 import Loading from "../../Components/Loading";
 
-const pokeapiUrl = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=151";
-
 export default function Main() {
   const [pokemons, setPokemons] = useState([]);
   const [counterType, setCounterType] = useState();
   const [counterAbilities, setCounterAbilities] = useState();
   const [loading, setLoading] = useState(true);
 
-  async function searchingAPI() {
+  //contabiliza todos os pokemons por tipo sem buscar as informaçoes completas de cada pokemon
+  async function searchingTypesAPI() {
+    let arrayTypes = [];
+
+    //dataAPI = todos os tipo de pokemons {name, url}
+    const dataAPI = await fetch("https://pokeapi.co/api/v2/type").then(
+      (response) => response.json()
+    );
+    //inicializa arrayType com os tipos e valor inicial do contador igual a zero. Ex: [grass: 0, bug: 0, ...]
+    dataAPI.results.forEach((element) => {
+      arrayTypes.push({ name: element.name, value: 0 });
+    });
+    for (const t of dataAPI.results) {
+      //t é o tipo e a url. Ex: {name: normal, url: https://pokeapi.co/api/v2/type/1 }
+      const type = await fetch(t.url).then((response) => response.json());
+
+      //type são todas as informações do tipo, incluindo todos os pokemons daquele tipo(type.pokemon)
+      for (const p of type.pokemon) {
+        //idPokemon é o numero final da url do pokemon(https://pokeapi.co/api/v2/pokemon/ID)
+        const idPokemon = p.pokemon.url.split("/")[6];
+        //verifica se o pokemon é um dos 151 primeiros, somente pela url
+        if (idPokemon < 152) {
+          const index = arrayTypes.findIndex((t) => t.name === type.name);
+          arrayTypes[index].value++;
+        } else {
+          //todos os proximos pokemons desse tipo serão acima do 151, entao quebra o loop e inicia o próximo tipo
+          break;
+        }
+      }
+    }
+    return arrayTypes;
+  }
+
+  async function searching30Pokemons() {
     let result = [];
     //dataAPI.results = busca de todos os pokemons{nome,url}
-    const dataAPI = await fetch(pokeapiUrl).then((response) => response.json());
+    const dataAPI = await fetch(
+      "https://pokeapi.co/api/v2/pokemon?limit=30"
+    ).then((response) => response.json());
 
     //busca de todas as informações em sequencia
     for (const pokemonInfo of dataAPI.results) {
@@ -29,25 +62,23 @@ export default function Main() {
     return result;
   }
 
-  function settingTypes(listPokemons) {
+  async function searchingAllPokemonsInfo() {
     let result = [];
-    for (const pokemon of listPokemons) {
-      for (const element of pokemon.types) {
-        if (result.findIndex((i) => i === element.type.name) === -1) {
-          result.push(element.type.name);
-        }
-      }
+    //dataAPI.results = busca de todos os pokemons{nome,url}
+    const dataAPI = await fetch(
+      "https://pokeapi.co/api/v2/pokemon?limit=121&offset=30"
+    ).then((response) => response.json());
+
+    //busca de todas as informações em sequencia
+    for (const pokemonInfo of dataAPI.results) {
+      const pokemon = await fetch(pokemonInfo.url).then((response) =>
+        response.json()
+      );
+      result.push(pokemon);
     }
     return result;
   }
 
-  function initCountType(types) {
-    let result = [];
-    types.forEach((type) => {
-      result.push({ name: type, value: 0 });
-    });
-    return result;
-  }
   function initCountAbilities() {
     let result = [];
     const abilities = ["1", "2", "3", "4"];
@@ -59,31 +90,37 @@ export default function Main() {
   }
 
   useEffect(() => {
-    searchingAPI().then((result) => {
+    //carregando pieChart Data
+    searchingTypesAPI().then((result) => {
+      setCounterType(result);
+      setLoading(false);
+    });
+    let _30Pokemons = [];
+    //carregando os 30 primeiros pokemons da lista
+    searching30Pokemons().then((result) => {
+      _30Pokemons = result;
       setPokemons(result);
       setLoading(false);
+    });
 
-      const types = settingTypes(result);
-      let auxCounterType = initCountType(types);
+    //carregando todos os 151 pokemons
+    searchingAllPokemonsInfo().then((result) => {
+      const allPokemons = _30Pokemons.concat(result);
+      setPokemons(allPokemons);
+      setLoading(false);
+      // carregando barChart data
       let auxCounterAbilities = initCountAbilities();
-      result.forEach((pokemon) => {
+      allPokemons.forEach((pokemon) => {
         auxCounterAbilities[pokemon.abilities.length - 1].value++;
-        pokemon.types.forEach((type) => {
-          const index = auxCounterType.findIndex(
-            (i) => i.name === type.type.name
-          );
-          if (auxCounterType[index]) {
-            auxCounterType[index].value++;
-          }
-        });
       });
       setCounterAbilities(auxCounterAbilities);
-      setCounterType(auxCounterType);
     });
   }, []);
 
   return loading ? (
-    <Loading />
+    <div className="app">
+      <Loading />
+    </div>
   ) : (
     <div className="app">
       <div className="row-charts">
@@ -94,6 +131,13 @@ export default function Main() {
         />
       </div>
       <ListPokemon data={pokemons} loading={loading} />
+      {pokemons.length < 151 ? (
+        <h1 style={{ textAlign: "center", color: "#fff" }}>
+          CARREGANDO MAIS POKEMONS ...
+        </h1>
+      ) : (
+        <div />
+      )}
     </div>
   );
 }

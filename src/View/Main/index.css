@@ -1,10 +1,10 @@
 .app {
+  display: flex;
   background-color: #d53b2d;
-  padding: 16px;
   justify-content: center;
+  flex-direction: column;
 }
 .row-charts {
   display: flex;
   flex-wrap: wrap;
 }
-
